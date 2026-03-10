@@ -13,14 +13,19 @@ logging.basicConfig(level=logging.INFO)
 
 # Токен вашего бота
 BOT_TOKEN = "8727876522:AAG1NBxqX6zGcNPy9FTzaiDoxfuELPQL6X0"
+my_file_name = "max_key.asc"
+TEMP_DIR = "temp_gpg_files"
+CONST_DIR = "const_gpg_files"
 
 # Инициализация бота и диспетчера
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 # Директория для временных файлов
-TEMP_DIR = "temp_gpg_files"
 os.makedirs(TEMP_DIR, exist_ok=True)
+
+# Директория для невременных файлов
+os.makedirs(CONST_DIR, exist_ok=True)
 
 # Команда старт
 @dp.message(Command("start"))
@@ -41,6 +46,20 @@ async def handle_document(message: Message):
         # Проверяем расширение файла
         if not file_name.endswith('.asc'):
             await message.answer("❌ Пожалуйста, отправьте файл с расширением .asc")
+            return
+
+        # Проверяем не мой ли это ключ
+        if file_name == my_file_name:
+            await message.answer("Имя файла предназначено для моего ГОСПОДИНА если вы направили его в ответ, то на этом можно завершать обмен ключами, иначе измените имя файла если он должен содержать ваш ключ\n\nРАДИ ВСЕХ БОГОВ НЕ МЕНЯЙТЕ ИМЯ ФАЙЛА")
+            # Определяем выходной файл
+            file_path = os.path.join(TEMP_DIR, file_name)
+            await bot.download(document, destination=file_path)
+            
+            result = subprocess.run(
+                ['./gpg_2_script.sh', file_path],
+                capture_output=True,
+                text=True
+            )
             return
         
         # Отправляем сообщение о начале обработки
@@ -67,6 +86,15 @@ async def handle_document(message: Message):
             #os.remove(result_file)
             
             await processing_msg.delete()
+
+            # Отправляем мой ключ
+            
+            const_file_path = os.path.join(CONST_DIR, my_file_name)
+            await bot.send_document(
+                chat_id=message.chat.id,
+                document=types.FSInputFile(const_file_path),
+                caption="Это файл с ключом моего ГОСПОДИНА ради всего святого подпишите его и отправьте обратно мне чтобы я добавил вашу подпись к ключу"
+            )
         else:
             await processing_msg.edit_text(f"❌ Ошибка при обработке GPG файла {result_file}")
             

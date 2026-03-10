@@ -1,0 +1,6 @@
+gpg: key 1E4E48E810D27C1D: 1 signature not checked due to a missing key
+gpg: key 1E4E48E810D27C1D: "MAX (Программы — как секс: лучше, когда бесплатно.) <maks.kurnosov@bk.ru>" not changed
+gpg: key 35B797D771B37A6D: 1 signature not checked due to a missing key
+gpg: key 35B797D771B37A6D: "OgarevMaxim <ogarrmax@yandex.ru\\r>" not changed
+gpg: Total number processed: 2
+gpg:              unchanged: 2
