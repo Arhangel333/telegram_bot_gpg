@@ -1,0 +1,25 @@
+# Виртуальное окружение
+venv/
+env/
+ENV/
+.venv/
+__pycache__/
+*.pyc
+
+# Файлы с секретами
+.env
+*.asc
+*.gpg
+temp_gpg_files/
+
+# Логи
+*.log
+*.log.*
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Файлы бота (если нужно исключить)
+bot.session
+*.session
